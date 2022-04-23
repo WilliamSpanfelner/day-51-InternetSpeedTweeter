@@ -41,4 +41,8 @@ class InternetSpeedTwitterBot:
 
 
     def tweet_at_provider(self):
-        pass
+        url = "https://twitter.com/i/flow/login"
+        driver = self.driver
+        driver.get(url)
+
+
