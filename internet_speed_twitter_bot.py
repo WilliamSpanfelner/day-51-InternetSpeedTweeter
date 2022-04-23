@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 
 class InternetSpeedTwitterBot:
@@ -40,9 +41,18 @@ class InternetSpeedTwitterBot:
         driver.quit()
 
 
-    def tweet_at_provider(self):
+    def tweet_at_provider(self, username):
         url = "https://twitter.com/i/flow/login"
         driver = self.driver
         driver.get(url)
 
+        time.sleep(10)
+
+        # Find text field and send username
+        username_input = driver.find_element(By.XPATH, "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[5]/label/div/div[2]/div/input")
+        username_input.click()
+        username_input.send_keys(username)
+
+        # Locate and click the "next" button
+        username_input.send_keys(Keys.TAB + Keys.ENTER)
 
