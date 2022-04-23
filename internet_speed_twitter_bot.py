@@ -41,7 +41,7 @@ class InternetSpeedTwitterBot:
         driver.quit()
 
 
-    def tweet_at_provider(self, username):
+    def tweet_at_provider(self, username, password):
         url = "https://twitter.com/i/flow/login"
         driver = self.driver
         driver.get(url)
@@ -55,4 +55,13 @@ class InternetSpeedTwitterBot:
 
         # Locate and click the "next" button
         username_input.send_keys(Keys.TAB + Keys.ENTER)
+
+        time.sleep(10)
+
+        # Send password
+        password_input = driver.find_element(By.NAME, "password")
+        password_input.send_keys(password)
+
+        # Locate and click the "login" button
+        password_input.send_keys(Keys.TAB + Keys.TAB + Keys.TAB + Keys.ENTER)
 
