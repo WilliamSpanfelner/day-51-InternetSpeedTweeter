@@ -41,7 +41,7 @@ class InternetSpeedTwitterBot:
         driver.quit()
 
 
-    def tweet_at_provider(self, username, password):
+    def tweet_at_provider(self, username, password, down, up, p_down, p_up):
         url = "https://twitter.com/i/flow/login"
         driver = self.driver
         driver.get(url)
@@ -56,7 +56,7 @@ class InternetSpeedTwitterBot:
         # Locate and click the "next" button
         username_input.send_keys(Keys.TAB + Keys.ENTER)
 
-        time.sleep(10)
+        time.sleep(15)
 
         # Send password
         password_input = driver.find_element(By.NAME, "password")
@@ -64,4 +64,14 @@ class InternetSpeedTwitterBot:
 
         # Locate and click the "login" button
         password_input.send_keys(Keys.TAB + Keys.TAB + Keys.TAB + Keys.ENTER)
+
+        time.sleep(10)
+
+        # Target the message input and enter a message
+        tweet = f"Hey Internet Provider, why is my internet speed {down}down/{up}up, " \
+                f"when I pay for {p_down}down/{p_up}up?"
+
+        tweet_input = driver.find_element(By.CSS_SELECTOR, 'div[aria-label="Tweet text"]')
+        tweet_input.click()
+        tweet_input.send_keys(tweet)
 
