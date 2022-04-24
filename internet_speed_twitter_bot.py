@@ -75,3 +75,6 @@ class InternetSpeedTwitterBot:
         tweet_input.click()
         tweet_input.send_keys(tweet)
 
+        # Locate the Tweet button and tweet the message
+        tweet_button = driver.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetButtonInline"]')
+        tweet_button.click()
