@@ -1,10 +1,12 @@
 import time
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+
+PROMISED_DOWN = 150
+PROMISED_UP = 10
 
 
 class InternetSpeedTwitterBot:
@@ -15,41 +17,33 @@ class InternetSpeedTwitterBot:
 
     def get_internet_speed(self):
         url = "https://www.speedtest.net"
-        driver = self.driver
-        driver.get(url)
+        self.driver.get(url)
 
         # Click "I Consent" button
-        consent_button = driver.find_element(By.CSS_SELECTOR, "button#_evidon-banner-acceptbutton")
+        consent_button = self.driver.find_element(By.CSS_SELECTOR, "button#_evidon-banner-acceptbutton")
         consent_button.click()
 
         # Click the "GO" button to start speed test
-        go_button = driver.find_element(By.CSS_SELECTOR, "a span.start-text")
+        go_button = self.driver.find_element(By.CSS_SELECTOR, "a span.start-text")
         go_button.click()
 
         # driver.implicitly_wait(180)
         time.sleep(60)
 
         # Read download speed
-        down_result = driver.find_element(By.CSS_SELECTOR, "span.download-speed")
-        up_result = driver.find_element(By.CSS_SELECTOR, "span.upload-speed")
-        # print(f"down speed: {down_result.text}")
-        # print(f"up speed: {up_result.text}")
+        self.down = self.driver.find_element(By.CSS_SELECTOR, "span.download-speed").text
+        self.up = self.driver.find_element(By.CSS_SELECTOR, "span.upload-speed").text
+        # print(f"down: {self.down} up: {self.up}")
 
-        self.down = float(down_result.text)
-        self.up = float(up_result.text)
-
-        driver.quit()
-
-
-    def tweet_at_provider(self, username, password, down, up, p_down, p_up):
+    def tweet_at_provider(self, username, password):
         url = "https://twitter.com/i/flow/login"
-        driver = self.driver
-        driver.get(url)
+        self.driver.get(url)
 
         time.sleep(10)
 
         # Find text field and send username
-        username_input = driver.find_element(By.XPATH, "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[5]/label/div/div[2]/div/input")
+        username_input = self.driver.find_element(By.XPATH,
+                                                  "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[5]/label/div/div[2]/div/input")
         username_input.click()
         username_input.send_keys(username)
 
@@ -59,7 +53,7 @@ class InternetSpeedTwitterBot:
         time.sleep(15)
 
         # Send password
-        password_input = driver.find_element(By.NAME, "password")
+        password_input = self.driver.find_element(By.NAME, "password")
         password_input.send_keys(password)
 
         # Locate and click the "login" button
@@ -68,13 +62,16 @@ class InternetSpeedTwitterBot:
         time.sleep(10)
 
         # Target the message input and enter a message
-        tweet = f"Hey Internet Provider, why is my internet speed {down}down/{up}up, " \
-                f"when I pay for {p_down}down/{p_up}up?"
+        tweet = f"Hey Internet Provider, why is my internet speed {self.down}down/{self.up}up, " \
+                f"when I pay for {PROMISED_DOWN}down/{PROMISED_UP}up?"
 
-        tweet_input = driver.find_element(By.CSS_SELECTOR, 'div[aria-label="Tweet text"]')
+        tweet_input = self.driver.find_element(By.CSS_SELECTOR, 'div[aria-label="Tweet text"]')
         tweet_input.click()
         tweet_input.send_keys(tweet)
 
         # Locate the Tweet button and tweet the message
-        tweet_button = driver.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetButtonInline"]')
+        tweet_button = self.driver.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetButtonInline"]')
         tweet_button.click()
+
+        time.sleep(5)
+        self.driver.quit()
