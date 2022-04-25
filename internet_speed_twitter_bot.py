@@ -12,6 +12,7 @@ PROMISED_UP = 10
 class InternetSpeedTwitterBot:
     def __init__(self):
         self.driver = webdriver.Firefox()
+        self.wait = WebDriverWait(self.driver, 30)
         self.down = 0
         self.up = 0
 
@@ -39,33 +40,37 @@ class InternetSpeedTwitterBot:
         url = "https://twitter.com/i/flow/login"
         self.driver.get(url)
 
-        time.sleep(10)
+        # time.sleep(10)
 
         # Find text field and send username
-        username_input = self.driver.find_element(By.XPATH,
-                                                  "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[5]/label/div/div[2]/div/input")
+        username_input = self.wait.until(EC.presence_of_element_located((By.XPATH,
+                                                  "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[5]/label/div/div[2]/div/input")))
+        # username_input = self.driver.find_element(By.XPATH,
+        #                                           "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[5]/label/div/div[2]/div/input")
         username_input.click()
         username_input.send_keys(username)
 
         # Locate and click the "next" button
         username_input.send_keys(Keys.TAB + Keys.ENTER)
 
-        time.sleep(15)
+        # time.sleep(15)
 
         # Send password
-        password_input = self.driver.find_element(By.NAME, "password")
+        password_input = self.wait.until(EC.presence_of_element_located((By.NAME, "password")))
+        # password_input = self.driver.find_element(By.NAME, "password")
         password_input.send_keys(password)
 
         # Locate and click the "login" button
         password_input.send_keys(Keys.TAB + Keys.TAB + Keys.TAB + Keys.ENTER)
 
-        time.sleep(10)
+        # time.sleep(10)
 
         # Target the message input and enter a message
         tweet = f"Hey Internet Provider, why is my internet speed {self.down}down/{self.up}up, " \
                 f"when I pay for {PROMISED_DOWN}down/{PROMISED_UP}up?"
 
-        tweet_input = self.driver.find_element(By.CSS_SELECTOR, 'div[aria-label="Tweet text"]')
+        tweet_input = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[aria-label="Tweet text"]')))
+        # tweet_input = self.driver.find_element(By.CSS_SELECTOR, 'div[aria-label="Tweet text"]')
         tweet_input.click()
         tweet_input.send_keys(tweet)
 
